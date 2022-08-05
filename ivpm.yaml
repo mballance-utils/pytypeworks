@@ -1,0 +1,11 @@
+
+package:
+  name: pytypeworks
+  version: 0.0.1
+
+  dep-sets:
+  - name: default-dev
+    deps: []
+  - name: default
+    deps: []
+
