@@ -17,11 +17,24 @@ class ClsDecoratorBase(object):
     def pre_decorate(self, T):
         pass
     
+    def pre_init_annotated_fields(self):
+        pass
+    
     def init_annotated_field(self, key, value, has_init):
+        pass
+    
+    def post_init_annotated_fields(self):
         pass
     
     def set_field_initial(self, key, init):
         setattr(self.T, key, init)
+        
+    def add_field_decl(self, key, type, has_init, init=None):
+        if not hasattr(self.T, "__annotations__"):
+            setattr(self.T, "__annotations__", dict())
+        self.T.__annotations__[key] = type
+        if has_init:
+            setattr(T, key, init)
     
     def decorate(self, T):
         return dataclasses.dataclass(T, **self.kwargs)
@@ -46,19 +59,11 @@ class ClsDecoratorBase(object):
             ti._post_init = T.__post_init__
         
         self.pre_decorate(T)
-        
+
+        self.pre_init_annotated_fields()        
         for key,value in getattr(T, "__annotations__", {}).items():
             self.init_annotated_field(key, value, hasattr(T, key))
-            # if not hasattr(T, key):
-            #     print("key=%s value=%s" % (str(key), str(value)))
-            #     found = False
-                
-            #     for sc in type(self).IS_SUBCLASS_TYPES:
-            #         if issubclass(value, sc[0]):
-            #             print("is subclass of %s default=%s" % (str(sc[0]), str(sc[1])))
-            #             setattr(T, key, dataclasses.field(init=False, default=sc[1]))
-            #             found = True
-            #             break
+        self.post_init_annotated_fields()
                     
         Tp = self.decorate(T)
         
