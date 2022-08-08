@@ -1,5 +1,10 @@
 
-class TypeRgy(object):
+class TypeRgyMeta(type):
+    
+    def inst(self):
+        return self
+
+class TypeRgy(metaclass=TypeRgyMeta):
 
     _inst = None
 
