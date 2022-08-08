@@ -5,7 +5,11 @@ package:
 
   dep-sets:
   - name: default-dev
-    deps: []
+    deps: 
+    - name: sphinx
+      src: pypi
   - name: default
     deps: []
+
+
 
