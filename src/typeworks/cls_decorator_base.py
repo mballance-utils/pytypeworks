@@ -30,11 +30,16 @@ class ClsDecoratorBase(object):
         setattr(self.T, key, init)
         
     def add_field_decl(self, key, type, has_init, init=None):
-        if not hasattr(self.T, "__annotations__"):
-            setattr(self.T, "__annotations__", dict())
-        self.T.__annotations__[key] = type
+        if type is None and not has_init:
+            raise Exception("add_field_decl requires either a non-None type or an initial value")
+        
+        if type is not None:
+            if not hasattr(self.T, "__annotations__"):
+                setattr(self.T, "__annotations__", dict())
+            self.T.__annotations__[key] = type
+            
         if has_init:
-            setattr(T, key, init)
+            setattr(self.T, key, init)
     
     def decorate(self, T):
         return dataclasses.dataclass(T, **self.kwargs)

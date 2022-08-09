@@ -17,8 +17,11 @@ class TypeInfo(object):
             self._post_init(obj)
     
     @staticmethod
-    def get(T):
+    def get(T, create=True):
         if not hasattr(T, "_typeinfo"):
-            setattr(T, "_typeinfo", TypeInfo(T))
+            if create:
+                setattr(T, "_typeinfo", TypeInfo(T))
+            else:
+                return None
         return T._typeinfo
     
