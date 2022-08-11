@@ -1,6 +1,7 @@
 
 import dataclasses
 
+import typeworks
 from typeworks.impl.typeinfo import TypeInfo
 
 class ClsDecoratorBase(object):
@@ -13,6 +14,12 @@ class ClsDecoratorBase(object):
         self.kwargs = kwargs
         self.typeinfo = None
         self.T = None
+        
+    def get_type_category(self):
+        raise Exception("Class %s does not implement get_type_category" % str(type(self)))
+    
+    def get_type_elab_f(self):
+        return None
         
     def pre_decorate(self, T):
         pass
@@ -80,6 +87,11 @@ class ClsDecoratorBase(object):
         for m in type(self).TYPE_PROCESSING_HOOKS:
             print("TypeProcessingHook: %s" % str(m))
             m(self, T)
+            
+        typeworks.TypeRgy.register_type(
+            self.get_type_category(),
+            ti,
+            self.get_type_elab_f())
 
         # TODO: Check the registered method-based decorators
 
