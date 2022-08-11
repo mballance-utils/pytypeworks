@@ -1,25 +1,23 @@
 
 class TypeRgyMeta(type):
     
-    def inst(self):
-        return self
-
-class TypeRgy(metaclass=TypeRgyMeta):
-
-    _inst = None
-
-    def __init__(self):
+    def __init__(self, name, bases, dct):
+        
         pass
-
+    
     def load_done(self):
         pass
+    
+    def inst(self):
+        return self
+    
+    def reset(self):
+        pass
+    
+    def register_type(self, key, T):
+        pass
+        
 
-    @classmethod
-    def inst(cls):
-        if cls._inst is None:
-            cls._inst = cls()
-        return cls._inst
+class TypeRgy(metaclass=TypeRgyMeta):
+    pass
 
-    @classmethod
-    def reset(cls):
-        cls._inst = None

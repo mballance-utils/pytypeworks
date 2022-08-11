@@ -4,6 +4,7 @@ from .type_rgy import TypeRgy
 from .cls_decorator_base import *
 from .registration_decorator_base import *
 from .impl.decl_rgy import DeclRgy
+from .type_rgy import TypeRgy
 from .impl.typeinfo import TypeInfo
 
 

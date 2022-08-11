@@ -10,7 +10,6 @@ class TypeInfo(object):
         pass
     
     def init(self, obj, args, kwargs):
-        print("TypeInfo.init")
         self._decorator_init(obj, *args, **kwargs)
         
         if self._post_init is not None:
