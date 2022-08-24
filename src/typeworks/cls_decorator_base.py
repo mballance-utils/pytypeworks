@@ -54,6 +54,12 @@ class ClsDecoratorBase(object):
     def post_decorate(self, T, Tp):
         pass
     
+    def pre_register(self):
+        pass
+    
+    def post_register(self):
+        pass
+    
     def get_typeinfo(self):
         if self.typeinfo is None:
             self.typeinfo = TypeInfo.get(self.T)
@@ -74,7 +80,7 @@ class ClsDecoratorBase(object):
 
         self.pre_init_annotated_fields()        
         for key,value in getattr(T, "__annotations__", {}).items():
-            self.init_annotated_field(key, value, hasattr(T, key))
+            self.init_annotated_field(key, value, hasattr(T, key), getattr(T, key, None))
         self.post_init_annotated_fields()
                     
         Tp = self.decorate(T)
@@ -88,10 +94,14 @@ class ClsDecoratorBase(object):
             print("TypeProcessingHook: %s" % str(m))
             m(self, T)
             
+        self.pre_register()
+            
         typeworks.TypeRgy.register_type(
             self.get_type_category(),
             ti,
             self.get_type_elab_f())
+        
+        self.post_register()
 
         # TODO: Check the registered method-based decorators
 
