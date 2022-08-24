@@ -37,7 +37,7 @@ jobs:
         branch: gh-pages
         folder: html
     - name: Publish to PyPi
-      if: startsWith(github.ref, 'refs/heads/master')
+      if: startsWith(github.ref, 'refs/heads/main')
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
