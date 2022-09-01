@@ -3,6 +3,7 @@ class DeclRgyMeta(type):
     
     def __init__(self, name, bases, dct):
         self._decl_m = {}
+        self._inner_type_m = {}
         pass
     
     def push_decl(self, key, obj):
@@ -20,6 +21,26 @@ class DeclRgyMeta(type):
         else:
             ret = []
         return ret
+
+    def add_inner_type(self, T):
+        print("Add name: %s" % T.__name__)
+#        self._inner_type_m[T.__name__] = T
+        qname_l = T.__qualname__.split('.')
+        i = len(qname_l)-1
+
+        while i >= 0:
+            if qname_l[i] == "<locals>":
+                break
+            name = ".".join(qname_l[i:])
+            self._inner_type_m[name] = T
+            i -= 1
+
+    @property
+    def inner_types(self):
+        return self._inner_type_m
+
+    def clear_inner_types(self):
+        self._inner_type_m.clear()
         
     
     def inst(self):

@@ -2,7 +2,9 @@
 import dataclasses
 
 import typeworks
+from typeworks.impl.decl_rgy import DeclRgy
 from typeworks.impl.typeinfo import TypeInfo
+import typing
 
 class ClsDecoratorBase(object):
     
@@ -70,6 +72,7 @@ class ClsDecoratorBase(object):
         self.T = T
         
         print("IS_SUBCLASS_TYPES=%s" % str(type(self).IS_SUBCLASS_TYPES))
+        print("  T: %s" % T.__qualname__)
 
         ti = self.get_typeinfo()
         
@@ -78,8 +81,32 @@ class ClsDecoratorBase(object):
         
         self.pre_decorate(T)
 
-        self.pre_init_annotated_fields()        
+        self.pre_init_annotated_fields()
+        local_ns = locals().copy()
+        # for name,T in DeclRgy.inner_types.items():
+        #     local_ns[name] = T
+#        global_ns = globals().copy()
+#        for name,T in DeclRgy.inner_types.items():
+#            global_ns[name] = T
+        # try:
+        #     hints =  typing.get_type_hints(
+        #         T, 
+        #         localns=local_ns,
+        #         globalns=global_ns)
+        # except Exception as e:
+        #     print("Exception: %s" % str(e))
+        #     raise e
+
+#        print("hints: %s" % str(hints))
+        inner_types = DeclRgy.inner_types
+        print("inner_types: %s" % str(inner_types))
         for key,value in getattr(T, "__annotations__", {}).items():
+            print("key: %s ; type: %s" % (key, str(type(value))))
+            if type(value) is str and value in inner_types.keys():
+                print("Intercept %s" % key)
+                value = inner_types[value]
+#        for key,value in hints.items():
+            print("FIELD: %s %s" % (str(key), str(value)))
             self.init_annotated_field(key, value, hasattr(T, key), getattr(T, key, None))
         self.post_init_annotated_fields()
                     
