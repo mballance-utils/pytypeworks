@@ -1,25 +1,40 @@
 
+from typing import Dict, List
+
+
 class DeclRgyMeta(type):
     
     def __init__(self, name, bases, dct):
         self._decl_m = {}
         self._inner_type_m = {}
+        self._scope_decl_m : Dict[str,Dict[object,List[object]]] = {}
         pass
     
-    def push_decl(self, key, obj):
-        if key not in self._decl_m.keys():
-            self._decl_m[key] = []
-        self._decl_m[key].append(obj)
+    def push_decl(self, key, obj, scope=None):
+        if scope not in self._scope_decl_m.keys():
+            self._scope_decl_m[scope] = {}
+        scope_m = self._scope_decl_m[scope]
+
+        if key not in scope_m.keys():
+            scope_m[key] = []
+        scope_m[key].append(obj)
         
     def have_decl(self, key):
         return key in self._decl_m.keys() and len(self._decl_m[key]) > 0
     
-    def pop_decl(self, key):
-        if key in self._decl_m.keys():
-            ret = self._decl_m[key].copy()
-            self._decl_m[key].clear()
+    def pop_decl(self, key, scope=None):
+        ret = []
+        if scope is None:
+            # Grab from all scopes
+            for scope_m in self._scope_decl_m.values():
+                if key in scope_m.keys():
+                    ret.extend(scope_m[key])
+                    scope_m[key].clear()
         else:
-            ret = []
+            if scope in self._scope_decl_m.keys():
+                if key in self._scope_decl_m[scope].keys():
+                    ret.extend(self._scope_decl_m[scope][key])
+                    self._scope_decl_m[scope][key].clear()
         return ret
 
     def add_inner_type(self, T):

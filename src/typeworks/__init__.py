@@ -20,3 +20,12 @@ def load_done():
     """
     TypeRgy.inst().load_done()
 
+def enclosing_scopename(T):
+    elems = T.__qualname__.split(".")
+    if len(elems) > 1:
+        return ".".join(elems[:-1])
+    else:
+        return ""
+
+def scopename(T):
+    return T.__qualname__
