@@ -4,6 +4,7 @@ import dataclasses
 import typeworks
 from typeworks.impl.decl_rgy import DeclRgy
 from typeworks.impl.typeinfo import TypeInfo
+import logging
 import typing
 
 class ClsDecoratorBase(object):
@@ -16,6 +17,7 @@ class ClsDecoratorBase(object):
         self.kwargs = kwargs
         self.typeinfo = None
         self.T = None
+        self.logger = logging.getLogger(type(self).__name__)
         
     def get_type_category(self):
         raise Exception("Class %s does not implement get_type_category" % str(type(self)))
@@ -71,8 +73,8 @@ class ClsDecoratorBase(object):
         
         self.T = T
         
-        print("IS_SUBCLASS_TYPES=%s" % str(type(self).IS_SUBCLASS_TYPES))
-        print("  T: %s" % T.__qualname__)
+        self.logger.debug("IS_SUBCLASS_TYPES=%s" % str(type(self).IS_SUBCLASS_TYPES))
+        self.logger.debug("  T: %s" % T.__qualname__)
 
         ti = self.get_typeinfo()
         
@@ -99,14 +101,14 @@ class ClsDecoratorBase(object):
 
 #        print("hints: %s" % str(hints))
         inner_types = DeclRgy.inner_types
-        print("inner_types: %s" % str(inner_types))
+        self.logger.debug("inner_types: %s" % str(inner_types))
         for key,value in getattr(T, "__annotations__", {}).items():
-            print("key: %s ; type: %s" % (key, str(type(value))))
+            self.logger.debug("key: %s ; type: %s" % (key, str(type(value))))
             if type(value) is str and value in inner_types.keys():
-                print("Intercept %s" % key)
+                self.logger.debug("Intercept %s" % key)
                 value = inner_types[value]
 #        for key,value in hints.items():
-            print("FIELD: %s %s" % (str(key), str(value)))
+            self.logger.debug("FIELD: %s %s" % (str(key), str(value)))
             self.init_annotated_field(key, value, hasattr(T, key), getattr(T, key, None))
         self.post_init_annotated_fields()
                     
@@ -118,7 +120,7 @@ class ClsDecoratorBase(object):
         self.post_decorate(T, Tp)
         
         for m in type(self).TYPE_PROCESSING_HOOKS:
-            print("TypeProcessingHook: %s" % str(m))
+            self.logger.debug("TypeProcessingHook: %s" % str(m))
             m(self, T)
             
         self.pre_register()
