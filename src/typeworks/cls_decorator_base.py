@@ -84,7 +84,7 @@ class ClsDecoratorBase(object):
         self.pre_decorate(T)
 
         self.pre_init_annotated_fields()
-        local_ns = locals().copy()
+        #local_ns = locals().copy()
         # for name,T in DeclRgy.inner_types.items():
         #     local_ns[name] = T
 #        global_ns = globals().copy()
