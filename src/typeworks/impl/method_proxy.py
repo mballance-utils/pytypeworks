@@ -19,13 +19,12 @@
 #*     Author: 
 #*
 #****************************************************************************
-from .method_info import MethodInfo
 
 class MethodProxy(object):
 
-    def __init__(self, mi : MethodInfo):
-        self.mi = mi
+    def __init__(self, T):
+        self.T = T
 
     def __call__(self, *args, **kwargs):
-        return self.mi.__call__(*args, *kwargs)
+        return self.T(*args, *kwargs)
 

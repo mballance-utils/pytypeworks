@@ -30,3 +30,10 @@ def enclosing_scopename(T):
 
 def scopename(T):
     return T.__qualname__
+
+def localname(T):
+    n = T.__qualname__
+    if "<locals>" in n:
+        return n[n.find("<locals>")+9:]
+    else:
+        return n
