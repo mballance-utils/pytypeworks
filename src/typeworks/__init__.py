@@ -1,5 +1,4 @@
 
-import imp
 from .type_rgy import TypeRgy
 from .cls_decorator_base import *
 from .method_decorator_base import *
