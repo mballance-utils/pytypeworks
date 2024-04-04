@@ -31,7 +31,7 @@ class ClsDecoratorBase(object):
     def pre_init_annotated_fields(self):
         pass
     
-    def init_annotated_field(self, key, value, has_init):
+    def init_annotated_field(self, key, value, has_init, init):
         pass
     
     def post_init_annotated_fields(self):
